@@ -11,6 +11,39 @@
   {% if poster.image %}
   <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static poster.image %}">
   {% endif %}
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": "{{ poster.title|escapejs }}",
+    "description": "{{ poster.short_description|escapejs }}",
+    {% if poster.image %}"image": "{{ request.scheme }}://{{ request.get_host }}{% static poster.image %}",{% endif %}
+    "startDate": "{{ poster.date|date:'Y-m-d' }}{% if poster.time %}T{{ poster.time|time:'H:i' }}:00+09:00{% endif %}",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "location": {
+      "@type": "Place",
+      "name": "{{ site.name }}",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "{{ site.street }}",
+        "addressLocality": "{{ site.city }}",
+        "addressRegion": "{{ site.region }}",
+        "postalCode": "{{ site.postal_code }}",
+        "addressCountry": "{{ site.country }}"
+      }
+    },
+    {% if poster.organizer %}"organizer": {
+      "@type": "Organization",
+      "name": "{{ poster.organizer|escapejs }}"
+    },{% endif %}
+    "performer": {
+      "@type": "Organization",
+      "name": "{{ site.name }}"
+    }
+  }
+  </script>
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -19,6 +52,17 @@
     <a href="{% url 'venue:poster_list' %}">Афиша</a> <span>/</span>
     <span>{{ poster.title }}</span>
   </nav>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Главная", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'venue:home' %}"},
+      {"@type": "ListItem", "position": 2, "name": "Афиша", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'venue:poster_list' %}"},
+      {"@type": "ListItem", "position": 3, "name": "{{ poster.title|escapejs }}"}
+    ]
+  }
+  </script>
 {% endblock %}
 
 {% block content %}

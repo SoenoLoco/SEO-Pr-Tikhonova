@@ -31,10 +31,43 @@
   <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Manrope:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-  {# SEO-ЗАДАНИЕ (микроразметка): сюда удобно положить JSON-LD Schema.org   #}
-  {# для организации (EventVenue / LocalBusiness): название, адрес, телефон,#}
-  {# часы работы, координаты, ссылки на соцсети (sameAs).                    #}
-  {# Данные уже есть в шаблоне: {{ site.name }}, {{ site.address }} и т.д.   #}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EventVenue",
+    "name": "{{ site.name }}",
+    "legalName": "{{ site.legal_name }}",
+    "description": "{{ site.tagline }}",
+    "url": "{{ request.scheme }}://{{ request.get_host }}/",
+    "telephone": "{{ site.phone_raw }}",
+    "email": "{{ site.email }}",
+    "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/og-default.jpg' %}",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "{{ site.street }}",
+      "addressLocality": "{{ site.city }}",
+      "addressRegion": "{{ site.region }}",
+      "postalCode": "{{ site.postal_code }}",
+      "addressCountry": "{{ site.country }}"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "{{ site.geo.lat }}",
+      "longitude": "{{ site.geo.lon }}"
+    },
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+      "opens": "12:00",
+      "closes": "02:00"
+    },
+    "sameAs": [
+      "{{ site.telegram }}",
+      "{{ site.vk }}"
+    ]
+  }
+  </script>
+
   {% block extra_head %}{% endblock %}
 </head>
 <body class="{% block body_class %}{% endblock %}">

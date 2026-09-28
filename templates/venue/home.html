@@ -5,6 +5,29 @@
 {% block title %}Банкетный зал в стиле лофт в Чите | Подземка{% endblock %}
 {% block description %}Подземка — атмосферный банкетный зал в подвале на Курнатовского, 17. Свадьбы, корпоративы и концерты на 30–350 гостей. Своя кухня и бар. Бронируйте дату!{% endblock %}
 
+{% block extra_head %}
+  {% if faqs %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {% for q in faqs %}
+      {
+        "@type": "Question",
+        "name": "{{ q.question|escapejs }}",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "{{ q.answer|escapejs }}"
+        }
+      }{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    ]
+  }
+  </script>
+  {% endif %}
+{% endblock %}
+
 {% block content %}
 <section class="hero">
   <div class="hero__bg" aria-hidden="true">
