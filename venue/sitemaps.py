@@ -12,36 +12,37 @@ SEO-ЗАДАНИЕ: карта сайта (sitemap.xml).
 Документация: https://docs.djangoproject.com/en/stable/ref/contrib/sitemaps/
 """
 
-# from django.contrib.sitemaps import Sitemap
-# from django.urls import reverse
-#
-# from .models import Hall
-#
-#
-# class StaticViewSitemap(Sitemap):
-#     """Статичные страницы: главная, залы, меню, контакты..."""
-#     priority = 0.8
-#     changefreq = "monthly"
-#
-#     def items(self):
-#         # ПОДСКАЗКА: имена маршрутов смотрите в venue/urls.py (app_name = "venue").
-#         # Должны ли попадать в карту сайта страница бронирования? А дубль главной /home/?
-#         return ["venue:home", "venue:hall_list", ...]
-#
-#     def location(self, item):
-#         return reverse(item)
-#
-#
-# class HallSitemap(Sitemap):
-#     """Страницы отдельных залов — берутся из БД."""
-#     changefreq = "weekly"
-#     priority = 0.9
-#
-#     def items(self):
-#         # ПОДСКАЗКА: только активные залы!
-#         ...
-#
-#     # location() не нужен, если у модели есть get_absolute_url()
-#
-#     # Задание со звёздочкой: добавьте поле updated_at = DateTimeField(auto_now=True)
-#     # в модель Hall и метод lastmod(self, obj), чтобы поисковик знал дату изменения.
+from django.contrib.sitemaps import Sitemap
+from django.urls import reverse
+
+from .models import Hall
+
+
+class StaticViewSitemap(Sitemap):
+    """Статичные страницы сайта"""
+    priority = 0.8
+    changefreq = "monthly"
+
+    def items(self):
+        return [
+          "venue:home",
+          "venue:hall_list",
+          "venue:poster_list",
+           "venue:menu",
+           "venue:events",
+           "venue:gallery",
+           "venue:contacts",
+         ]
+
+    def location(self, item):
+        return reverse(item)
+
+
+class HallSitemap(Sitemap):
+    """Страницы отдельных залов — берутся из БД."""
+    changefreq = "weekly"
+    priority = 0.9
+
+    def items(self):
+        return Hall.objects.filter(is_active=True)
+    # location() не нужен, если у модели есть get_absolute_url()

@@ -53,3 +53,10 @@
 2. Подключён маршрут `/robots.txt` в `podzemka/urls.py` через `TemplateView` с `content_type="text/plain"`
 3. Закрыты от индексации: `/admin/`, `/booking/`, `/home/`, `/accounts/`, URL с GET-параметрами (`/*?*`)
 4. Добавлена директива `Sitemap:` с абсолютным URL
+
+# Блок 4. Карта сайта sitemap.xml
+
+1. Подключено приложение `django.contrib.sitemaps` в `INSTALLED_APPS`
+2. Доделан `venue/sitemaps.py`: класс `StaticViewSitemap` (7 статических страниц) и класс `HallSitemap` (только активные залы)
+3. Маршрут `/sitemap.xml` подключён в `podzemka/urls.py`
+4. Обновлён `robots.txt` — теперь директива `Sitemap:` ведёт на рабочий адрес
