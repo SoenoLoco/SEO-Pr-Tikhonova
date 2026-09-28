@@ -2,9 +2,14 @@
 
 {% block title %}Банкетное меню и цены на человека | Подземка{% endblock %}
 
-
-
 {% block description %}Банкетное меню в Подземке: сеты от шефа, авторская коктейльная карта, пакеты напитков. Цены от 2 500 ₽/гость. Соберём меню под ваше событие!{% endblock %}
+
+{% block breadcrumbs %}
+  <nav class="container breadcrumbs mono" aria-label="Хлебные крошки">
+    <a href="{% url 'venue:home' %}">Главная</a> <span>/</span>
+    <span>Меню</span>
+  </nav>
+{% endblock %}
 
 {% block content %}
 <section class="page-head">

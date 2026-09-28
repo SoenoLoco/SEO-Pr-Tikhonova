@@ -3,6 +3,13 @@
 {% block title %}Афиша событий в Чите: квизы и вечеринки в лофте | Подземка{% endblock %}
 {% block description %}Афиша Подземки: квизы, вечеринки, концерты и зарядки. Смотрите расписание и бронируйте столик онлайн. Новые события каждую неделю!{% endblock %}
 
+{% block breadcrumbs %}
+  <nav class="container breadcrumbs mono" aria-label="Хлебные крошки">
+    <a href="{% url 'venue:home' %}">Главная</a> <span>/</span>
+    <span>Афиша</span>
+  </nav>
+{% endblock %}
+
 {% block content %}
 <section class="page-head">
   <div class="container">

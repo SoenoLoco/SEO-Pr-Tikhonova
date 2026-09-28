@@ -31,8 +31,7 @@
       </ul>
     </div>
     <div class="hall-hero__img">
-      {# SEO-ЗАДАНИЕ: alt, width, height. Первая картинка на экране — lazy не нужен (почему?). #}
-      <img src="{% static hall.image %}">
+      <img src="{% static hall.image %}" alt="Зал '{{ hall.name }}' - {{ hall.short_description }}" width="800" height="600">
     </div>
   </div>
 </section>

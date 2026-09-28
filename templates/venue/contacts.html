@@ -3,8 +3,14 @@
 
 {% block title %}Контакты и адрес в Чите: ул. Курнатовского, 17 | Подземка{% endblock %}
 
-
 {% block description %}Адрес Подземки: Чита, ул. Курнатовского, 17. Работаем ежедневно с 12:00 до 02:00. Телефон: +7 (900) 123-45-67. Приезжайте на экскурсию!{% endblock %}
+
+{% block breadcrumbs %}
+  <nav class="container breadcrumbs mono" aria-label="Хлебные крошки">
+    <a href="{% url 'venue:home' %}">Главная</a> <span>/</span>
+    <span>Галерея</span>
+  </nav>
+{% endblock %}
 
 {% block content %}
 <section class="page-head">

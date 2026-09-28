@@ -7,11 +7,16 @@
 
 {% block title %}Форматы мероприятий: свадьбы, корпоративы, юбилеи | Подземка{% endblock %}
 
-
 {% block description %}Проводим свадьбы, корпоративы, дни рождения, выпускные и концерты. Залы от 30 до 350 гостей в стиле лофт. Рассчитайте стоимость мероприятия!{% endblock %}
+
+{% block breadcrumbs %}
+  <nav class="container breadcrumbs mono" aria-label="Хлебные крошки">
+    <a href="{% url 'venue:home' %}">Главная</a> <span>/</span>
+    <span>Мероприятия</span>
+  </nav>
+{% endblock %}
+
 {% block content %}
-
-
 <section class="page-head">
   <div class="container">
     <p class="mono muted">Форматы</p>

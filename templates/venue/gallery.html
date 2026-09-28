@@ -4,11 +4,18 @@
 {% block title %}Фотогалерея залов в стиле лофт в Чите | Подземка{% endblock %}
 {% block description %}Фотографии залов Подземки: кирпичные своды, бетон и неон. Посмотрите, как выглядят наши залы без гостей. Приезжайте на экскурсию!{% endblock %}
 
+{% block breadcrumbs %}
+  <nav class="container breadcrumbs mono" aria-label="Хлебные крошки">
+    <a href="{% url 'venue:home' %}">Главная</a> <span>/</span>
+    <span>Галерея</span>
+  </nav>
+{% endblock %}
+
 {% block content %}
 <section class="page-head">
   <div class="container">
     <p class="mono muted">Фото</p>
-    <h1 class="page-head__title">Галерея</h1>
+    <h1 class="page-head__title">Галерея залов в стиле лофт</h1>
     <p class="page-head__lead">Так выглядят залы без гостей. Фото с мероприятий — в наших соцсетях.</p>
   </div>
 </section>
@@ -17,17 +24,8 @@
   <div class="container gallery">
     {% for photo in photos %}
       <figure class="gallery__item">
-        {# ============================================================== #}
-        {# SEO-ЗАДАНИЕ (изображения):                                      #}
-        {#  1. Добавьте alt — описание того, что на фото (не «фото1»!).    #}
-        {#  2. Добавьте width и height (против сдвига макета, CLS).         #}
-        {#  3. Добавьте loading="lazy" для картинок ниже первого экрана.    #}
-        {#  4. Задание со звёздочкой: перейдите на форматы WebP/AVIF и      #}
-        {#     <picture>/srcset для разных размеров экрана.                 #}
-        {#  5. Названия файлов — латиницей и по смыслу (как сейчас) — ок.   #}
-        {# ============================================================== #}
         <a href="{% static photo.src %}" class="gallery__link" data-lightbox="{{ photo.caption }}">
-          <img src="{% static photo.src %}">
+          <img src="{% static photo.src %}" alt="{{ photo.caption }} - подземка, Чита" width="600" height="400" loading="lazy">
         </a>
         <figcaption class="mono">{{ photo.caption }}</figcaption>
       </figure>

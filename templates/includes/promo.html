@@ -3,16 +3,8 @@
 <section class="promo" id="promo">
   <div class="container promo__inner">
     <div class="promo__photo">
-      {# ================================================================ #}
-      {# SEO-ЗАДАНИЕ (тяжёлая картинка): это фото весит ~1 МБ и имеет   #}
-      {# размер 2560×1706, а показывается максимум ~600px в ширину.       #}
-      {#  1. Уменьшите и сожмите его (WebP/AVIF, цель — до 100 КБ).        #}
-      {#  2. Добавьте alt, width, height и loading="lazy".                #}
-      {#  3. Посмотрите, как изменится оценка в Lighthouse до/после.      #}
-      {# Исходный файл в корне репозитория назывался                      #}
-      {# «jZtXzb4tLohZu9NJ....jpg» — почему такое имя плохо для SEO?      #}
-      {# ================================================================ #}
-      <img src="{% static promo.host_photo %}">
+      <img src="{% static promo.host_photo %}" alt="Ведущий {{ promo.host_name }} — акция «{{ promo.title }}»"
+     width="800" height="600" loading="lazy">
       <span class="promo__badge">−{{ promo.discount }}%</span>
     </div>
 

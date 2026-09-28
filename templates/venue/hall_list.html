@@ -4,8 +4,15 @@
 {% block title %}Залы для банкета в стиле лофт на 30–350 гостей | Подземка{% endblock %}
 
 {% block description %}Четыре зала в стиле метро: «Тоннель», «Депо», «Платформа» и «Вестибюль». От 30 до 350 гостей. Смотрите фото, цены и вместимость. Забронируйте зал в Чите!{% endblock %}
-{% block content %}
 
+{% block breadcrumbs %}
+  <nav class="container breadcrumbs mono" aria-label="Хлебные крошки">
+    <a href="{% url 'venue:home' %}">Главная</a> <span>/</span>
+    <span>Залы</span>
+  </nav>
+{% endblock %}
+
+{% block content %}
 <section class="page-head">
   <div class="container">
     <p class="mono muted">Схема линий</p>
@@ -19,9 +26,7 @@
     {% for hall in halls %}
       <article class="hall-card" style="--c: {{ hall.line_color }}">
         <a href="{{ hall.get_absolute_url }}" class="hall-card__img">
-          {# SEO-ЗАДАНИЕ: alt="" у картинки зала. Напишите осмысленный alt: #}
-          {# например: «Банкетный зал {{ hall.name }} в стиле лофт» #}
-          <img src="{% static hall.image %}" alt="">
+          <img src="{% static hall.image %}" alt="Банкетный зал '{{ hall.name }}' в стиле лофт - {{ hall.capacity_banquet }} гостей" width="800" height="500" loading="lazy">
           <span class="hall-card__line mono">Линия {{ hall.line_number }}</span>
         </a>
         <div class="hall-card__body">
@@ -33,8 +38,7 @@
             <li><b>{{ hall.area }}</b> м²</li>
             <li>от <b>{{ hall.price_from }}</b> ₽</li>
           </ul>
-          {# SEO-ЗАДАНИЕ (анкоры): «Смотреть» → «Смотреть зал {{ hall.name }}» #}
-          <a href="{{ hall.get_absolute_url }}" class="link-arrow">Смотреть →</a>
+          <a href="{{ hall.get_absolute_url }}" class="link-arrow">Смотреть зал '{{ hall.name }}' →</a>
         </div>
       </article>
     {% endfor %}
