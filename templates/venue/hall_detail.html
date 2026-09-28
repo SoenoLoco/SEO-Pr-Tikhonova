@@ -1,15 +1,14 @@
 {% extends "base.html" %}
 {% load static %}
 
-{# ================================================================== #}
-{# SEO-ЗАДАНИЕ: динамические мета-теги.                                #}
-{# Title и description должны генерироваться из данных зала, например: #}
-{#   {% block title %}Зал «{{ hall.name }}» — банкет до {{ hall.capacity_banquet }} гостей | Подземка{% endblock %} #}
-{# Description можно собрать из hall.short_description + вместимость + цена. #}
-{# Для og:image используйте картинку зала (абсолютный URL!).           #}
-{# ================================================================== #}
+{% block title %}Зал «{{ hall.name }}» — банкет до {{ hall.capacity_banquet }} гостей | Подземка{% endblock %}
 
-{% block breadcrumbs %}
+{% block description %}Зал «{{ hall.name }}» в Подземке: {{ hall.short_description|truncatechars:100 }} Вместимость до {{ hall.capacity_banquet }} гостей, цена от {{ hall.price_from }} ₽/гость. Забронируйте дату!{% endblock %}
+
+{% block extra_head %}
+  <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static hall.image %}">
+{% endblock %}
+
   {# SEO-ПОДСКАЗКА: заготовка крошек. Добавьте разметку BreadcrumbList (JSON-LD или microdata). #}
   <nav class="container breadcrumbs mono" aria-label="Хлебные крошки">
     <a href="{% url 'venue:home' %}">Главная</a> <span>/</span>

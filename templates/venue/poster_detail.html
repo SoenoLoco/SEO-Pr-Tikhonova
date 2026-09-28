@@ -1,18 +1,17 @@
 {% extends "base.html" %}
 {% load static %}
 
-{# ================================================================== #}
-{# SEO-ЗАДАНИЕ: динамические title и description события, например:   #}
-{#   «{{ poster.title }}: квиз по теме «{{ poster.topic }}» — {{ poster.date|date:"j E" }} | Подземка» #}
-{#                                                                      #}
-{# SEO-ЗАДАНИЕ (Schema.org Event, JSON-LD) — положите в extra_head:     #}
-{#   "@type": "Event", "name", "startDate" (ISO 8601, с временем и      #}
-{#   часовым поясом +09:00 — это Чита!), "eventStatus",                 #}
-{#   "eventAttendanceMode": OfflineEventAttendanceMode,                  #}
-{#   "location": {"@type": "Place", "name", "address": PostalAddress}, #}
-{#   "image", "description", "organizer".                               #}
-{# Проверьте в https://validator.schema.org/                            #}
-{# ================================================================== #}
+{% block title %}{{ poster.title }}{% if poster.topic %} — {{ poster.topic }}{% endif %} | Подземка{% endblock %}
+
+
+{% block description %}{{ poster.short_description|truncatechars:120 }} {{ poster.date|date:"j E Y" }}{% if poster.time %}, начало в {{ poster.time|time:"H:i" }}{% endif %}. Бронируйте столик!{% endblock %}
+
+
+{% block extra_head %}
+  {% if poster.image %}
+  <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static poster.image %}">
+  {% endif %}
+{% endblock %}
 
 {% block breadcrumbs %}
   <nav class="container breadcrumbs mono" aria-label="Хлебные крошки">

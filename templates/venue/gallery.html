@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% load static %}
 
-{# SEO-ЗАДАНИЕ: title/description для галереи. #}
+{% block title %}Фотогалерея залов в стиле лофт в Чите | Подземка{% endblock %}
+{% block description %}Фотографии залов Подземки: кирпичные своды, бетон и неон. Посмотрите, как выглядят наши залы без гостей. Приезжайте на экскурсию!{% endblock %}
 
 {% block content %}
 <section class="page-head">
   <div class="container">
     <p class="mono muted">Фото</p>
-    {# SEO-ЗАДАНИЕ: у этой страницы НЕТ h1 вообще — только h2. Исправьте. #}
-    <h2 class="page-head__title">Галерея</h2>
+    <h1 class="page-head__title">Галерея</h1>
     <p class="page-head__lead">Так выглядят залы без гостей. Фото с мероприятий — в наших соцсетях.</p>
   </div>
 </section>
