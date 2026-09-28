@@ -7,15 +7,14 @@ class Hall(models.Model):
 
     name = models.CharField("Название", max_length=100)
 
-    # SEO-ЗАДАНИЕ (ЧПУ — человекопонятные URL):
-    # Сейчас залы открываются по адресу /halls/1/, /halls/2/ ... — это плохо для SEO.
-    # ПОДСКАЗКА: добавьте поле
-    #     slug = models.SlugField("URL", max_length=120, unique=True)
-    # затем: makemigrations -> migrate, заполните slug в админке (или через
-    # prepopulated_fields в admin.py), поменяйте маршрут в venue/urls.py на <slug:slug>
-    # и get_absolute_url() ниже. Хорошие адреса: /halls/depo/, /halls/tonnel/
-    # Будьте внимательны: unique=True на заполненной таблице требует миграции в 2 шага
-    # (или временно null=True / default) — разберитесь, как это сделать.
+    slug = models.SlugField(
+        "URL",
+        max_length=120,
+        unique=True,
+        null=True,
+        allow_unicode=True,
+        help_text="ЧПУ для адреса: /halls/depo/",
+    )
 
     line_color = models.CharField(
         "Цвет линии (HEX)", max_length=7, default="#e4312b",
@@ -55,8 +54,7 @@ class Hall(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        # ПОДСКАЗКА: после добавления slug замените pk=self.pk на slug=self.slug
-        return reverse("venue:hall_detail", kwargs={"pk": self.pk})
+        return reverse("venue:hall_detail", kwargs={"slug": self.slug})
 
     def features_list(self):
         return [f.strip() for f in self.features.splitlines() if f.strip()]
@@ -187,12 +185,14 @@ class Poster(models.Model):
     image = models.CharField("Картинка (путь в static)", max_length=200, blank=True)
     is_published = models.BooleanField("Опубликовано", default=True)
 
-    # SEO-ЗАДАНИЕ (ЧПУ): как и у залов, адрес события сейчас /afisha/1/.
-    # Хороший адрес: /afisha/kviz-60-sekund-kompyuternye-igry/ — добавьте slug.
-    # ПОДСКАЗКА: у события в афише есть всё для Schema.org Event:
-    # name, startDate, location (Place + PostalAddress), image, organizer, description.
-    # Такая разметка может дать расширенный сниппет с датой в выдаче.
-    # Для регулярных событий (schedule) в Schema.org есть eventSchedule (тип Schedule).
+    slug = models.SlugField(
+        "URL",
+        max_length=150,
+        unique=True,
+        null=True,
+        allow_unicode=True,
+        help_text="ЧПУ для адреса: /afisha/kviz-60-sekund/",
+    )
 
     class Meta:
         verbose_name = "Событие афиши"
@@ -203,4 +203,4 @@ class Poster(models.Model):
         return f"{self.title} ({self.date:%d.%m.%Y})"
 
     def get_absolute_url(self):
-        return reverse("venue:poster_detail", kwargs={"pk": self.pk})
+        return reverse("venue:poster_detail", kwargs={"slug": self.slug})

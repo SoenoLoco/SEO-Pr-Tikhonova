@@ -34,8 +34,8 @@ def hall_list(request):
     })
 
 
-def hall_detail(request, pk):
-    hall = get_object_or_404(Hall, pk=pk, is_active=True)
+def hall_detail(request, slug):
+    hall = get_object_or_404(Hall, slug=slug, is_active=True)
     others = Hall.objects.filter(is_active=True).exclude(pk=hall.pk)
     form = BookingForm(initial={"hall": hall})
     return render(request, "venue/hall_detail.html", {
@@ -43,6 +43,12 @@ def hall_detail(request, pk):
         "others": others,
         "form": form,
     })
+
+
+def hall_detail_redirect(request, pk):
+    """Старый URL /halls/1/ → 301 на /halls/depo/."""
+    hall = get_object_or_404(Hall, pk=pk, is_active=True)
+    return redirect(hall.get_absolute_url(), permanent=True)
 
 
 def upcoming_posters():
@@ -58,14 +64,18 @@ def poster_list(request):
     })
 
 
-def poster_detail(request, pk):
-    # SEO-ВОПРОС: что делать со страницей события, когда оно уже прошло?
-    # Отдавать 404? 410? Оставить в архиве с пометкой «событие прошло»?
-    poster = get_object_or_404(Poster, pk=pk, is_published=True)
+def poster_detail(request, slug):
+    poster = get_object_or_404(Poster, slug=slug, is_published=True)
     return render(request, "venue/poster_detail.html", {
         "poster": poster,
         "is_past": not poster.schedule and poster.date < datetime.date.today(),
     })
+
+
+def poster_detail_redirect(request, pk):
+    """Старый URL /afisha/1/ → 301 на /afisha/kviz-60-sekund/."""
+    poster = get_object_or_404(Poster, pk=pk, is_published=True)
+    return redirect(poster.get_absolute_url(), permanent=True)
 
 
 def menu(request):
