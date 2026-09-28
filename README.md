@@ -49,4 +49,7 @@
 
 # Блок 3. robots.txt
 
-1. 
+1. Создан файл `templates/robots.txt`
+2. Подключён маршрут `/robots.txt` в `podzemka/urls.py` через `TemplateView` с `content_type="text/plain"`
+3. Закрыты от индексации: `/admin/`, `/booking/`, `/home/`, `/accounts/`, URL с GET-параметрами (`/*?*`)
+4. Добавлена директива `Sitemap:` с абсолютным URL
