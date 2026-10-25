@@ -1,73 +1,51 @@
 {% load static %}<!DOCTYPE html>
-<html lang="ru">
+{# SEO-ЗАДАНИЕ: язык страницы. Какой атрибут lang должен быть у сайта на русском? #}
+<html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>{% block title %}Подземка - банкетный зал в стиле лофт в Чите{% endblock %}</title>
+  {# ================================================================== #}
+  {# SEO-ЗАДАНИЕ (title): сейчас у ВСЕХ страниц одинаковый заголовок.     #}
+  {# ПОДСКАЗКА: каждый шаблон-наследник должен переопределять блок title. #}
+  {# Шаблон хорошего title: «Главный ключ — уточнение | Подземка»,        #}
+  {# длина ~50-65 символов, уникален для каждой страницы.                 #}
+  {# ================================================================== #}
+  <title>{% block title %}Подземка{% endblock %}</title>
 
-  <meta name="description" content="{% block description %}Подземка - банкетный зал в стиле лофт в Чите. Свадьбы, корпоративы, дни рождения на 30-350 гостей. Своя кухня и бар{% endblock %}">
+  {# SEO-ЗАДАНИЕ (description): мета-описания нет вообще.                 #}
+  {# ПОДСКАЗКА: <meta name="description" content="...">, 120-160 символов, #}
+  {# уникально для каждой страницы. Заведите блок {% block description %}. #}
 
-  <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+  {# SEO-ЗАДАНИЕ (canonical): добавьте <link rel="canonical" href="...">  #}
+  {# ПОДСКАЗКА: абсолютный URL можно получить через                         #}
+  {# {{ request.scheme }}://{{ request.get_host }}{{ request.path }}        #}
 
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="{{ site.name }}">
-  <meta property="og:locale" content="ru_RU">
-  <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
-  <meta property="og:title" content="{% block og_title %}{{ block.super }}{% endblock %}">
-  <meta property="og:description" content="{% block og_description %}{{ block.super }}{% endblock %}">
-  <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'img/og-default.jpg' %}">
+  {# SEO-ЗАДАНИЕ (Open Graph / Twitter Cards): при отправке ссылки в       #}
+  {# Telegram/VK сейчас нет красивого превью. Нужны og:title, og:description,#}
+  {# og:image (абсолютный URL, 1200×630), og:url, og:type, og:site_name,   #}
+  {# og:locale, а также twitter:card.                                       #}
 
-  <meta name="twitter:card" content="summary_large_image">
+  {# SEO-ЗАДАНИЕ (robots): как запретить индексацию отдельной страницы?     #}
+  {# ПОДСКАЗКА: заведите {% block robots %}{% endblock %} и переопределите  #}
+  {# его на служебных страницах: <meta name="robots" content="noindex, follow"> #}
 
-  {% block robots %}<meta name="robots" content="noindex, follow">{% endblock %}
+  {# SEO-ЗАДАНИЕ (favicon): у сайта нет иконки. Нужны favicon.ico / .svg,  #}
+  {# apple-touch-icon и (по желанию) site.webmanifest + theme-color.        #}
 
-  <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}">
-  <link rel="apple-touch-icon" href="{% static 'img/favicon.svg' %}">
-  <meta name="theme-color" content="##0d0d0e">
+  {# SEO-ЗАДАНИЕ (верификация): сюда же добавляются мета-теги подтверждения #}
+  {# прав в Яндекс.Вебмастере и Google Search Console.                     #}
 
+  {# ПОДСКАЗКА (скорость): preconnect к Google Fonts уже есть — это хорошо. #}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Manrope:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "EventVenue",
-    "name": "{{ site.name }}",
-    "legalName": "{{ site.legal_name }}",
-    "description": "{{ site.tagline }}",
-    "url": "{{ request.scheme }}://{{ request.get_host }}/",
-    "telephone": "{{ site.phone_raw }}",
-    "email": "{{ site.email }}",
-    "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/og-default.jpg' %}",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "{{ site.street }}",
-      "addressLocality": "{{ site.city }}",
-      "addressRegion": "{{ site.region }}",
-      "postalCode": "{{ site.postal_code }}",
-      "addressCountry": "{{ site.country }}"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": "{{ site.geo.lat }}",
-      "longitude": "{{ site.geo.lon }}"
-    },
-    "openingHoursSpecification": {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
-      "opens": "12:00",
-      "closes": "02:00"
-    },
-    "sameAs": [
-      "{{ site.telegram }}",
-      "{{ site.vk }}"
-    ]
-  }
-  </script>
-
+  {# SEO-ЗАДАНИЕ (микроразметка): сюда удобно положить JSON-LD Schema.org   #}
+  {# для организации (EventVenue / LocalBusiness): название, адрес, телефон,#}
+  {# часы работы, координаты, ссылки на соцсети (sameAs).                    #}
+  {# Данные уже есть в шаблоне: {{ site.name }}, {{ site.address }} и т.д.   #}
   {% block extra_head %}{% endblock %}
 </head>
 <body class="{% block body_class %}{% endblock %}">
@@ -94,6 +72,10 @@
 
   {% include "includes/footer.html" %}
 
+  {% if umami_website_id %}
+  {# DEVOPS: аналитика Umami. Выводится, только если задан UMAMI_WEBSITE_ID. #}
+  <script defer src="{{ umami_script_url }}" data-website-id="{{ umami_website_id }}"></script>
+  {% endif %}
   <script src="{% static 'js/main.js' %}"></script>
   {% block extra_js %}{% endblock %}
 

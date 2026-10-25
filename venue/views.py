@@ -1,6 +1,9 @@
-import datetime
+from urllib.parse import urlparse
 
 from django.contrib import messages
+from django.db import connection
+from django.http import JsonResponse
+from django.utils import timezone
 from django.db.models import Avg, Q
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -34,8 +37,8 @@ def hall_list(request):
     })
 
 
-def hall_detail(request, slug):
-    hall = get_object_or_404(Hall, slug=slug, is_active=True)
+def hall_detail(request, pk):
+    hall = get_object_or_404(Hall, pk=pk, is_active=True)
     others = Hall.objects.filter(is_active=True).exclude(pk=hall.pk)
     form = BookingForm(initial={"hall": hall})
     return render(request, "venue/hall_detail.html", {
@@ -45,16 +48,10 @@ def hall_detail(request, slug):
     })
 
 
-def hall_detail_redirect(request, pk):
-    """Старый URL /halls/1/ → 301 на /halls/depo/."""
-    hall = get_object_or_404(Hall, pk=pk, is_active=True)
-    return redirect(hall.get_absolute_url(), permanent=True)
-
-
 def upcoming_posters():
     """Будущие события + регулярные (у них заполнено поле schedule)."""
     return Poster.objects.filter(is_published=True).filter(
-        Q(date__gte=datetime.date.today()) | ~Q(schedule=""),
+        Q(date__gte=timezone.localdate()) | ~Q(schedule=""),
     )
 
 
@@ -64,18 +61,14 @@ def poster_list(request):
     })
 
 
-def poster_detail(request, slug):
-    poster = get_object_or_404(Poster, slug=slug, is_published=True)
+def poster_detail(request, pk):
+    # SEO-ВОПРОС: что делать со страницей события, когда оно уже прошло?
+    # Отдавать 404? 410? Оставить в архиве с пометкой «событие прошло»?
+    poster = get_object_or_404(Poster, pk=pk, is_published=True)
     return render(request, "venue/poster_detail.html", {
         "poster": poster,
-        "is_past": not poster.schedule and poster.date < datetime.date.today(),
+        "is_past": not poster.schedule and poster.date < timezone.localdate(),
     })
-
-
-def poster_detail_redirect(request, pk):
-    """Старый URL /afisha/1/ → 301 на /afisha/kviz-60-sekund/."""
-    poster = get_object_or_404(Poster, pk=pk, is_published=True)
-    return redirect(poster.get_absolute_url(), permanent=True)
 
 
 def menu(request):
@@ -113,6 +106,9 @@ def booking(request):
         form = BookingForm(request.POST)
         if form.is_valid():
             form.save()
+            # DEVOPS (аналитика): запоминаем, с какой страницы пришла заявка,
+            # чтобы после редиректа отправить в Umami цель с этим свойством.
+            request.session["booking_source"] = booking_source(request)
             messages.success(request, "Заявка принята! Перезвоним в течение 15 минут.")
             return redirect("venue:booking")
     else:
@@ -121,4 +117,23 @@ def booking(request):
             "comment": request.GET.get("comment", ""),
             "guests": request.GET.get("guests"),
         })
-    return render(request, "venue/booking.html", {"form": form})
+    return render(request, "venue/booking.html", {
+        "form": form,
+        # pop: цель засчитывается один раз, при обновлении страницы повтора не будет
+        "booking_source": request.session.pop("booking_source", None),
+    })
+
+
+def booking_source(request):
+    """Откуда отправили форму: путь страницы из Referer (+ пометка калькулятора)."""
+    referer = urlparse(request.META.get("HTTP_REFERER", ""))
+    if "guests=" in referer.query:
+        return "calculator"
+    return referer.path or "unknown"
+
+
+def healthz(request):
+    """DEVOPS: проверка «жив ли сайт» для Docker и мониторинга. Ходит в БД."""
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT 1")
+    return JsonResponse({"status": "ok"})
