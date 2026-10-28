@@ -37,8 +37,8 @@ def hall_list(request):
     })
 
 
-def hall_detail(request, pk):
-    hall = get_object_or_404(Hall, pk=pk, is_active=True)
+def hall_detail(request, slug):
+    hall = get_object_or_404(Hall, slug=slug, is_active=True)
     others = Hall.objects.filter(is_active=True).exclude(pk=hall.pk)
     form = BookingForm(initial={"hall": hall})
     return render(request, "venue/hall_detail.html", {
@@ -61,10 +61,10 @@ def poster_list(request):
     })
 
 
-def poster_detail(request, pk):
+def poster_detail(request, slug):
     # SEO-ВОПРОС: что делать со страницей события, когда оно уже прошло?
     # Отдавать 404? 410? Оставить в архиве с пометкой «событие прошло»?
-    poster = get_object_or_404(Poster, pk=pk, is_published=True)
+    poster = get_object_or_404(Poster, slug=slug, is_published=True)
     return render(request, "venue/poster_detail.html", {
         "poster": poster,
         "is_past": not poster.schedule and poster.date < timezone.localdate(),
